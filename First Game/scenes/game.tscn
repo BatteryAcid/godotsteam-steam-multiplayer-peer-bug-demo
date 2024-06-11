@@ -611,16 +611,68 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="HostGame" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_nlliu")
 theme_override_font_sizes/font_size = 8
 text = "Host New Game"
 
 [node name="JoinAsPlayer2" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_fonts/font = ExtResource("7_8cblx")
 theme_override_font_sizes/font_size = 8
 text = "Join as Player 2"
+
+[node name="UseSteam" type="Button" parent="MultiplayerHUD/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_8cblx")
+theme_override_font_sizes/font_size = 8
+text = "Use Steam"
+
+[node name="SteamUI" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_left = -110.0
+offset_top = 1.0
+offset_bottom = 121.0
+
+[node name="Panel" type="Panel" parent="SteamUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SteamUI/Panel"]
+layout_mode = 0
+offset_right = 110.0
+offset_bottom = 40.0
+
+[node name="HostP2P" type="Button" parent="SteamUI/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_8cblx")
+theme_override_font_sizes/font_size = 8
+text = "Host P2P"
+
+[node name="ListLobbies" type="Button" parent="SteamUI/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("7_8cblx")
+theme_override_font_sizes/font_size = 8
+text = "List Lobbies"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="SteamUI/Panel"]
+custom_minimum_size = Vector2(100, 60)
+layout_mode = 2
+offset_top = 40.0
+offset_right = 110.0
+offset_bottom = 40.0
+
+[node name="LobbyList" type="VBoxContainer" parent="SteamUI/Panel/ScrollContainer"]
+layout_mode = 2
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/multiplayer_player.tscn")
@@ -637,6 +689,7 @@ script = ExtResource("10_nyxvp")
 position = Vector2(622.5, -136.5)
 shape = SubResource("RectangleShape2D_2186x")
 
-[connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/HostGame" to="GameManager" method="become_host"]
-[connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/JoinAsPlayer2" to="GameManager" method="join_as_player_2"]
+[connection signal="pressed" from="MultiplayerHUD/Panel/VBoxContainer/UseSteam" to="GameManager" method="use_steam"]
+[connection signal="pressed" from="SteamUI/Panel/VBoxContainer/HostP2P" to="GameManager" method="become_host"]
+[connection signal="pressed" from="SteamUI/Panel/VBoxContainer/ListLobbies" to="GameManager" method="list_steam_lobbies"]
 [connection signal="body_entered" from="FinishLine" to="FinishLine" method="_on_body_entered"]

@@ -13,12 +13,16 @@ var do_jump = false
 var _is_on_floor = true
 var alive = true
 
+@export var synced_position := Vector2()
+
 @export var player_id := 1:
 	set(id):
 		player_id = id
 		%InputSynchronizer.set_multiplayer_authority(id)
 
 func _ready():
+	position = synced_position
+	
 	if multiplayer.get_unique_id() == player_id:
 		$Camera2D.make_current()
 	else:
@@ -60,16 +64,21 @@ func _apply_movement_from_input(delta):
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 
 	move_and_slide()
+	
+	synced_position = position
 
 func _physics_process(delta):
-	if multiplayer.is_server():
+	if is_multiplayer_authority():#multiplayer.is_server():
 		if not alive && is_on_floor():
 			_set_alive()
 		
 		_is_on_floor = is_on_floor()
 		_apply_movement_from_input(delta)
 		
-	if not multiplayer.is_server() || MultiplayerManager.host_mode_enabled:
+		if MultiplayerManager.host_mode_enabled: # still need animations in host mode
+			_apply_animations(delta)
+	else:
+		position = synced_position
 		_apply_animations(delta)
 
 func mark_dead():
