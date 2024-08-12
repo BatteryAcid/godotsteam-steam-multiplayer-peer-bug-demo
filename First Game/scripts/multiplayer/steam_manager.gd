@@ -12,6 +12,8 @@ var lobby_max_members = 10
 
 var multiplayer_scene = preload("res://scenes/multiplayer_player.tscn")
 var multiplayer_peer: SteamMultiplayerPeer = SteamMultiplayerPeer.new()
+
+
 #var _players_spawn_node
 var _hosted_lobby_id = 0
 
@@ -79,7 +81,16 @@ func _on_lobby_created(connect: int, lobby_id):
 		_create_host()
 
 func _create_host():
-	var error =  multiplayer_peer.create_host(0, [])
+
+	#var options = [[9,1,1024000]] 
+	#var error =  multiplayer_peer.create_host(0,[])
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_BUFFER_SIZE, 2097152)#)
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_RECV_BUFFER_SIZE, 2097152)
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_RATE_MAX, 2097152)
+	
+	#multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_NAGLE_TIME, 10000)
+	
+	var error =  multiplayer_peer.create_host(0) #,[])
 	
 	if error == OK:
 		multiplayer.set_multiplayer_peer(multiplayer_peer)
@@ -116,7 +127,10 @@ func _on_lobby_joined(lobby: int, permissions: int, locked: bool, response: int)
 		print(FAIL_REASON)
 
 func connect_socket(steam_id : int):
-	var error = multiplayer_peer.create_client(steam_id, 0, [])
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_BUFFER_SIZE, 2097152)#524288)
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_RECV_BUFFER_SIZE, 2097152)
+	multiplayer_peer.set_config(SteamPeerConfig.NETWORKING_CONFIG_SEND_RATE_MAX, 2097152)
+	var error = multiplayer_peer.create_client(steam_id, 0)#, [])
 	print("Client connect error: " + str(error))
 	multiplayer.set_multiplayer_peer(multiplayer_peer)
 

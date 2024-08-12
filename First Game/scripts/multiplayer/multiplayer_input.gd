@@ -1,6 +1,6 @@
-extends MultiplayerSynchronizer
+class_name PlayerInput extends Node
 
-@onready var player = $".."
+#@onready var player = $".."
 
 var input_direction 
 
@@ -24,4 +24,5 @@ func _process(delta):
 @rpc("call_local")
 func jump():
 	if multiplayer.is_server():
-		player.do_jump = true
+		print("jump")
+		#player.do_jump = true

@@ -8,27 +8,33 @@ const JUMP_VELOCITY = -300.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-var direction = 1
+#var direction = 1
 var do_jump = false
 var _is_on_floor = true
 var alive = true
 
+@export var input: PlayerInput
 @export var synced_position := Vector2()
 
 @export var player_id := 1:
 	set(id):
 		player_id = id
-		%InputSynchronizer.set_multiplayer_authority(id)
+		input.set_multiplayer_authority(id)
+		#%InputSynchronizer.set_multiplayer_authority(id)
 
 func _ready():
 	position = synced_position
 	
+	#if str(name).is_valid_int():
+		#%InputSynchronizer.set_multiplayer_authority(str(name).to_int())
+	#
 	if multiplayer.get_unique_id() == player_id:
 		$Camera2D.make_current()
 	else:
 		$Camera2D.enabled = false
 
 func _apply_animations(delta):
+	var direction = input.input_direction
 	# Flip the Sprite
 	if direction > 0:
 		animated_sprite.flip_h = false
@@ -55,7 +61,7 @@ func _apply_movement_from_input(delta):
 		do_jump = false
 
 	# Get the input direction: -1, 0, 1
-	direction = %InputSynchronizer.input_direction
+	var direction = input.input_direction# %InputSynchronizer.input_direction
 	
 	# Apply movement
 	if direction:
